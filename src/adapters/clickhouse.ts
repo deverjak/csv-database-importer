@@ -63,26 +63,55 @@ export class ClickHouseAdapter implements DatabaseAdapter {
 
   async insertBatch(tableName: string, columns: ColumnSchema[], rows: any[]): Promise<void> {
     if (!this.client) throw new Error('Not connected to database');
+    if (rows.length === 0) return;
 
+    // Format data as array of objects for JSONEachRow format
     const values = rows.map((row) => {
-      return columns.map((col) => {
+      const record: any = {};
+      columns.forEach((col) => {
         const value = convertValue(row[col.name], col.type);
-        if (value === null) return null;
+        
+        if (value === null) {
+          record[col.name] = null;
+          return;
+        }
 
         switch (col.type) {
           case 'string':
-            return value;
+            record[col.name] = value;
+            break;
           case 'number':
-            return value;
+            record[col.name] = value;
+            break;
           case 'boolean':
-            return value ? 1 : 0;
+            record[col.name] = value ? 1 : 0;
+            break;
           case 'date':
+            // ClickHouse Date format: YYYY-MM-DD
+            record[col.name] = value instanceof Date 
+              ? value.toISOString().split('T')[0] 
+              : value;
+            break;
           case 'datetime':
-            return value instanceof Date ? value.toISOString().split('T')[0] : value;
+            // ClickHouse DateTime format: YYYY-MM-DD HH:MM:SS
+            if (value instanceof Date) {
+              const pad = (n: number) => n.toString().padStart(2, '0');
+              const year = value.getFullYear();
+              const month = pad(value.getMonth() + 1);
+              const day = pad(value.getDate());
+              const hour = pad(value.getHours());
+              const minute = pad(value.getMinutes());
+              const second = pad(value.getSeconds());
+              record[col.name] = `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+            } else {
+              record[col.name] = value;
+            }
+            break;
           default:
-            return value;
+            record[col.name] = value;
         }
       });
+      return record;
     });
 
     await this.client.insert({
