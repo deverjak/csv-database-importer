@@ -212,8 +212,6 @@ NODE_OPTIONS="--max-old-space-size=8192" npm run dev -- import -f huge.csv -d mo
 
 \*Times are approximate and vary by database and hardware
 
-**See [LARGE_FILES.md](./LARGE_FILES.md) for detailed optimization guide.**
-
 ## Special Characters in Column Names
 
 The tool properly handles special characters, including square brackets, in column names (especially important for SQL Server).
@@ -232,8 +230,6 @@ These are automatically escaped correctly:
 - SQL Server: `[Time[h]]]`, `[I[A]]]`, `[Temp[°C]]]`
 - PostgreSQL: `"Time[h]"`, `"I[A]"`, `"Temp[°C]"`
 - Other databases handle them natively
-
-**See [MSSQL_COLUMN_NAMES.md](./MSSQL_COLUMN_NAMES.md) for detailed information.**
 
 ## Type Detection
 
@@ -322,8 +318,6 @@ npm run dev:large -- import -f file.csv -d mongodb -t data
 NODE_OPTIONS="--max-old-space-size=8192" npm run dev -- import -f file.csv -d mongodb -t data
 ```
 
-**See [LARGE_FILES.md](./LARGE_FILES.md) for optimization strategies.**
-
 ## Error Handling
 
 The tool provides clear error messages for common issues:
@@ -367,17 +361,6 @@ npm run dev:large -- import -f yourdata.csv -d postgres -t your_table -b 5000
 make shell-postgres
 # Then: SELECT COUNT(*) FROM your_table;
 ```
-
-## Documentation
-
-- [README.md](./README.md) - This file (quick start and overview)
-- [DOCKER_SETUP.md](./DOCKER_SETUP.md) - Complete Docker Compose guide
-- [LARGE_FILES.md](./LARGE_FILES.md) - Handling large CSV files
-- [MSSQL_TROUBLESHOOTING.md](./MSSQL_TROUBLESHOOTING.md) - SQL Server troubleshooting
-- [MSSQL_COLUMN_NAMES.md](./MSSQL_COLUMN_NAMES.md) - Special characters in column names
-- [PORT_CONFIGURATION.md](./PORT_CONFIGURATION.md) - Port conflicts and configuration
-- [MONGODB_GUIDE.md](./MONGODB_GUIDE.md) - MongoDB-specific guide
-- [EXAMPLES.md](./EXAMPLES.md) - Complete usage examples
 
 ## Development
 
